@@ -28,45 +28,14 @@ Dialog
         id: test
         anchors.fill: parent;
 
-        TableView
-        {
-            id: pagesList;
-
-            anchors {
-                left: parent.left;
-                top: parent.top;
-                bottom: parent.bottom;
-            }
-
-            width: 7 * UM.Theme.getSize("line").width;
-
-            alternatingRowColors: false;
-            headerVisible: false;
-
-            model: ListModel { id: configPagesModel; }
-
-            TableViewColumn { role: "name" }
-
-            onClicked:
-            {
-                if(base.currentPage != row)
-                {
-                    stackView.replace(configPagesModel.get(row).item);
-                    base.currentPage = row;
-                }
-            }
-        }
-
-        StackView {
+    StackView {
             id: stackView
             anchors {
-                left: pagesList.right
-                leftMargin: (UM.Theme.getSize("default_margin").width / 2) | 0
+                left: parent.left;
                 top: parent.top
                 bottom: parent.bottom
-                right: parent.right
             }
-
+            width: 50 * UM.Theme.getSize("line").width;
             initialItem: Item { property bool resetEnabled: false; }
 
             delegate: StackViewDelegate
@@ -98,6 +67,40 @@ Dialog
             }
         }
 
+        TableView
+        {
+            id: pagesList;
+            anchors {
+                left: stackView.right;
+                top: parent.top;
+                right:parent.right;
+            }
+
+            width: 7 * UM.Theme.getSize("line").width;
+            alternatingRowColors: false;
+            headerVisible: true;
+            model: ListModel { id: configPagesModel; }
+
+            TableViewColumn { role: "name" }
+
+            onClicked:
+            {
+                if(base.currentPage != row)
+                {
+                    stackView.replace(configPagesModel.get(row).item);
+                    base.currentPage = row;
+                }
+            }
+
+               Text {
+                id: header
+                text: "Menu"
+                anchors{
+                    horizontalCenter:parent.horizontalCenter
+                    margins:2
+                }
+                }
+        }
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 

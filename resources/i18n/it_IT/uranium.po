@@ -1247,3 +1247,8 @@ msgstr "Strumento immagine speculare"
 #~ msgctxt "@action:button"
 #~ msgid "Drop to Build Plate"
 #~ msgstr "Rilascia su piano di stampa"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+msgctxt "@title:window"
+msgid "Modifica Profilo"
+msgstr ""

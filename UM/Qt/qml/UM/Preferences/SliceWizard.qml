@@ -7,11 +7,10 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import ".."
 import UM 1.1 as UM
-
 Dialog
 {
     id: base;
-    title: catalog.i18nc("@title:window", "Preferences")
+    title: catalog.i18nc("@title:window", "SliceWizard")
     minimumWidth: UM.Theme.getSize("modal_window_minimum").width
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
@@ -21,11 +20,12 @@ Dialog
     {
         id: test
         anchors.fill: parent;
-    StackView {
+          StackView {
             id: stackView
             anchors {
-                left: parent.left;
+                left: pagesList.right;
                 top: parent.top
+                right:parent.right;
                 bottom: parent.bottom
             }
             width: 50 * UM.Theme.getSize("line").width;
@@ -61,17 +61,15 @@ Dialog
         {
             id: pagesList;
             anchors {
-                left: stackView.right;
+                left: parent.left;
                 top: parent.top;
-                right:parent.right;
+                bottom:parent.bottom;
             }
-            width: 7 * UM.Theme.getSize("line").width;
+            width: 10 * UM.Theme.getSize("line").width;
             alternatingRowColors: false;
             headerVisible: true;
             model: ListModel { id: configPagesModel; }
-
             TableViewColumn { role: "name" }
-
             onClicked:
             {
                 if(base.currentPage != row)
@@ -80,63 +78,51 @@ Dialog
                     base.currentPage = row;
                 }
             }
-
-               Text {
-                id: header
-                text: "Menu"
-                anchors{
-                    horizontalCenter:parent.horizontalCenter
-                    margins:2
-                }
-                }
+            Text {
+            id: header
+            text: "Steps"
+            anchors{
+                horizontalCenter:parent.horizontalCenter
+                margins:2
+            }
+            }
         }
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
-
-    leftButtons: Button
+   /* leftButtons: Button
     {
         text: catalog.i18nc("@action:button", "Defaults");
         enabled: stackView.currentItem.resetEnabled;
         onClicked: stackView.currentItem.reset();
-    }
-
+    }*/
     rightButtons: Button
     {
         text: catalog.i18nc("@action:button", "Close");
         iconName: "dialog-close";
         onClicked: base.accept();
     }
-
     function setPage(index)
     {
         pagesList.selection.clear();
         pagesList.selection.select(index);
-
         stackView.replace(configPagesModel.get(index).item);
-
         base.currentPage = index
     }
-
     function insertPage(index, name, item)
     {
         configPagesModel.insert(index, { "name": name, "item": item });
     }
-
     function removePage(index)
     {
         configPagesModel.remove(index)
     }
-
     function getCurrentItem(key)
     {
         return stackView.currentItem
     }
-
     Component.onCompleted:
     {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
-        insertPage(0, catalog.i18nc("@title:tab", "General"), Qt.resolvedUrl("GeneralPage.qml"));
-        insertPage(1, catalog.i18nc("@title:tab", "Settings"), Qt.resolvedUrl("SettingVisibilityPage.qml"));
-        setPage(0)
+      setPage(0)
     }
 }

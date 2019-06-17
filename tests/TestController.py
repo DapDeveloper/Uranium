@@ -77,28 +77,21 @@ def test_setActiveView(application):
 
 def test_addRemoveInputDevice(application):
     controller = Controller(application)
-
     input_device = InputDevice()
     input_device.setPluginId("input_device")
-
     controller.addInputDevice(input_device)
     controller.addInputDevice(input_device) # Doing it twice shouldn't cause issues.
-
     assert controller.getInputDevice("input_device") == input_device
     assert controller.getInputDevice("OMGZOMG") is None  # This device isn't added
-
     controller.removeInputDevice("input_device")
     assert controller.getInputDevice("input_device") is None
-
     controller.removeInputDevice("input_device") #Removing it again shouldn't cause issues.
 
 
 def test_setCameraTool(application):
     controller = Controller(application)
-
     camera_tool = Tool()
     camera_tool.setPluginId("camera_tool")
-
     controller.addTool(camera_tool)
 
     controller.setCameraTool(camera_tool)

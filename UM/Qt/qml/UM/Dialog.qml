@@ -13,7 +13,7 @@ Window {
     modality: Qt.ApplicationModal;
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint;
 
-    minimumWidth: screenScaleFactor * 640;
+    minimumWidth: screenScaleFactor * 800;
     minimumHeight: screenScaleFactor * 480;
     width: minimumWidth
     height: minimumHeight

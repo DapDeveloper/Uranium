@@ -26,14 +26,11 @@ catalog = i18nCatalog("uranium")
 class LocalFileOutputDevice(OutputDevice):
     def __init__(self):
         super().__init__("local_file")
-
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
         self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to File"))
         self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
         self.setIconName("save")
-
         self._writing = False
-
     ##  Request the specified nodes to be written to a file.
     #
     #   \param nodes A collection of scene nodes that should be written to the
@@ -46,14 +43,11 @@ class LocalFileOutputDevice(OutputDevice):
     def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None, **kwargs):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
-
         # Set up and display file dialog
         dialog = QFileDialog()
-
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
-
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
@@ -159,8 +153,7 @@ class LocalFileOutputDevice(OutputDevice):
 
             message = Message(catalog.i18nc("@info:progress Don't translate the XML tags <filename>!", "Saving to <filename>{0}</filename>").format(file_name),
                               0, False, -1 , catalog.i18nc("@info:title", "Saving"))
-            message.show()
-
+            #message.show()
             job.setMessage(message)
             self._writing = True
             job.start()
@@ -183,7 +176,7 @@ class LocalFileOutputDevice(OutputDevice):
             message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip", "Open the folder containing the file"))
             message._folder = os.path.dirname(job.getFileName())
             message.actionTriggered.connect(self._onMessageActionTriggered)
-            message.show()
+            #message.show()
         else:
             message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())), lifetime = 0, title = catalog.i18nc("@info:title", "Warning"))
             message.show()

@@ -25,15 +25,13 @@ from UM.Settings.SettingDefinition import SettingDefinition
 #   settings. This list can be quite a bit shorter than the list of definitions since all visibility criteria
 #   are applied.
 #
-class SettingDefinitionsModel(QAbstractListModel):
+class SettingDefinitionsModel2(QAbstractListModel):
     KeyRole = Qt.UserRole + 1
     DepthRole = Qt.UserRole + 2
     VisibleRole = Qt.UserRole + 3
     ExpandedRole = Qt.UserRole + 4
-
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
-
         self._container_id = None
         self._container = None
         self._i18n_catalog = None
@@ -345,7 +343,6 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtSlot(str, result = bool)
     def getVisible(self, key: str) -> bool:
         return key in self._visible
-
     @pyqtSlot(str, result = int)
     def getIndex(self, key: str) -> int:
         if not self._container:
@@ -353,73 +350,54 @@ class SettingDefinitionsModel(QAbstractListModel):
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
             return -1
-
         index = self._definition_list.index(definitions[0])
-
         # Make sure self._row_index_list is populated
         if self._update_visible_row_scheduled:
             self._update_visible_row_scheduled = False
             self._updateVisibleRows()
-
         try:
             return self._row_index_list.index(index)
         except ValueError:
             return -1
-
     @pyqtSlot(str, str, result = "QVariantList")
     def getRequires(self, key, role = None):
         if not self._container:
             return []
-
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
             return []
-
         result = []
         for relation in definitions[0].relations:
             if relation.type is not SettingRelation.RelationType.RequiresTarget:
                 continue
-
             if role and role != relation.role:
                 continue
-
             label = relation.target.label
             if self._i18n_catalog:
                 label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
-
             result.append({ "key": relation.target.key, "label": label})
-
         return result
-
     @pyqtSlot(str, str, result = "QVariantList")
     def getRequiredBy(self, key, role = None):
         if not self._container:
             return []
-
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
             return []
-
         result = []
         for relation in definitions[0].relations:
             if relation.type is not SettingRelation.RelationType.RequiredByTarget:
                 continue
-
             if role and role != relation.role:
                 continue
-
             label = relation.target.label
             if self._i18n_catalog:
                 label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
-
             result.append({ "key": relation.target.key, "label": label})
-
         return result
-
     ##  Reimplemented from ListModel only because we want to use it in static
     #   context in the subclass.
     itemsChanged = pyqtSignal()
-
     ##  Reimplemented from QAbstractListModel
     #
     #   Note that count() is overridden from QAbstractItemModel. The signature
@@ -430,9 +408,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     def count(self):
         if not self._container:
             return 0
-
         return len(self._row_index_list)
-
     ##  This function is necessary because it is abstract in QAbstractListModel.
     #
     #   Under the hood, Qt will call this function when it needs to know how
@@ -442,19 +418,24 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtSlot(QObject, result = int)
     def rowCount(self, parent = None) -> int:
         return self.count
+
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):
         if not self._container:
             return QVariant()
+
         if not index.isValid():
             return QVariant()
+
         if role not in self._role_names:
             return QVariant()
+
         try:
             definition = self._definition_list[self._row_index_list[index.row()]]
         except IndexError:
             # Definition is not visible or completely not in the list
             return QVariant()
+
         if role == self.KeyRole:
             return definition.key
         elif role == self.DepthRole:
@@ -463,11 +444,13 @@ class SettingDefinitionsModel(QAbstractListModel):
             return definition.key in self._visible
         elif role == self.ExpandedRole:
             return definition.key in self._expanded
+
         role_name = self._role_names[role]
         try:
             data = getattr(definition, role_name.decode())
         except AttributeError:
             data = ""
+
         if isinstance(data, collections.OrderedDict):
             result = []
             for key, value in data.items():
@@ -479,7 +462,9 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         if isinstance(data, str) and self._i18n_catalog:
             data = self._i18n_catalog.i18nc(definition.key + " " + role_name.decode(), data)
+
         return data
+
     ##  Reimplemented from QAbstractListModel
     def roleNames(self):
         return self._role_names
@@ -510,15 +495,18 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _update(self) -> None:
         if not self._container:
             return
+
         # Try and find a translation catalog for the definition
         for file_name in self._container.getInheritedFiles():
             catalog = i18nCatalog(os.path.basename(file_name))
             if catalog.hasTranslationLoaded():
                 self._i18n_catalog = catalog
+
         if self._root:
             new_definitions = self._root.findDefinitions()
         else:
             new_definitions = self._container.findDefinitions()
+
         # Check if a full reset is required
         if len(new_definitions) != len(self._definition_list):
             self.beginResetModel()

@@ -344,12 +344,10 @@ class Controller:
             self._camera_tool = cast(Optional[Tool], tool)
         else:
             self._camera_tool = self.getTool(tool)
-
     ##  Get the camera tool (if any)
     #   \returns camera tool (or none)
     def getCameraTool(self) -> Optional["Tool"]:
         return self._camera_tool
-
     ##  Set the tool used for performing selections.
     #   Selection tool receives its events after camera tool and active tool.
     #   The tool can be set by name of the tool or directly passing the tool object.
@@ -362,13 +360,10 @@ class Controller:
             self._selection_tool = cast(Optional[Tool], tool)
         else:
             self._selection_tool = self.getTool(tool)
-
     def getToolsEnabled(self) -> bool:
         return self._tools_enabled
-
     def setToolsEnabled(self, enabled: bool) -> None:
         self._tools_enabled = enabled
-
     # Rotate camera view according defined angle
     def rotateView(self, coordinate: str = "x", angle: int = 0) -> None:
         camera = self._scene.getActiveCamera()
@@ -385,7 +380,6 @@ class Controller:
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
             self._camera_tool.rotateCam(0, 0) #type: ignore
-
         else:
             # for comparison is == used, because might not store them at the same location
             # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce

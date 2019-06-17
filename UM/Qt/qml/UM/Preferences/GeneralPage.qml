@@ -30,7 +30,6 @@ PreferencesPage
                 id: languageList
                 ListElement { text: "English"; code: "en_US" }
             }
-
             currentIndex:
             {
                 var code = UM.Preferences.getValue("general/language");

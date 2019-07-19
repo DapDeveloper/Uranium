@@ -66,15 +66,12 @@ class Backend(PluginObject):
         if not command:
             self._createSocket()
             return
-
         if not self._backend_log_max_lines:
             self._backend_log = []
-
         # Double check that the old process is indeed killed.
         if self._process is not None:
             self._process.terminate()
             Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
-
         self._process = self._runEngineProcess(command)
         if self._process is None:  # Failed to start engine.
             return
@@ -86,13 +83,11 @@ class Backend(PluginObject):
         t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,))
         t.daemon = True
         t.start()
-
     def close(self):
         if self._socket:
             while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
             self._socket.close()
-
     def _backendLog(self, line):
         try:
             line_str = line.decode("utf-8")
@@ -100,7 +95,6 @@ class Backend(PluginObject):
             line_str = line.decode("latin1") #Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte.
         Logger.log("d", "[Backend] " + line_str.strip())
         self._backend_log.append(line)
-
     ##  Get the logging messages of the backend connection.
     #   \returns  
     def getLog(self):
@@ -108,11 +102,9 @@ class Backend(PluginObject):
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
         return self._backend_log
-    
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
         return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
-
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list) -> Optional[subprocess.Popen]:
         kwargs = {} #type: Dict[str, Any]
@@ -131,7 +123,6 @@ class Backend(PluginObject):
         except BlockingIOError:
             Logger.log("e", "Couldn't start back-end: Resource is temporarily unavailable")
         return None
-
     def _storeOutputToLogThread(self, handle):
         while True:
             try:
@@ -143,7 +134,6 @@ class Backend(PluginObject):
                 self.backendQuit.emit()
                 break
             self._backendLog(line)
-
     def _storeStderrToLogThread(self, handle):
         while True:
             try:
@@ -154,7 +144,6 @@ class Backend(PluginObject):
             if line == b"":
                 break
             self._backendLog(line)
-
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
         self._logSocketState(state)
@@ -164,7 +153,6 @@ class Backend(PluginObject):
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
-
     ## Debug function created to provide more info for CURA-2127
     def _logSocketState(self, state):
         if state == Arcus.SocketState.Listening:
@@ -179,17 +167,13 @@ class Backend(PluginObject):
             Logger.log("d", "Socket state changed to Closing")
         elif state == Arcus.SocketState.Closed:
             Logger.log("d", "Socket state changed to Closed")
-
     ##  Private message handler
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
-
         if message.getTypeName() not in self._message_handlers:
             Logger.log("e", "No handler defined for message of type %s", message.getTypeName())
             return
-
         self._message_handlers[message.getTypeName()](message)
-    
     ##  Private socket error handler   
     def _onSocketError(self, error):
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
@@ -202,9 +186,7 @@ class Backend(PluginObject):
             return
         else:
             Logger.log("w", "Unhandled socket error %s", str(error))
-
         self._createSocket()
-
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
         if self._socket:
@@ -218,23 +200,18 @@ class Backend(PluginObject):
             # If the error occurred due to parsing, both connections believe that connection is okay.
             # So we need to force a close.
             self._socket.close()
-
         self._socket = SignalSocket()
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
-        
         if Platform.isWindows():
             # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
             # So convert to forward slashes here so it finds the proto file properly.
             # Using sys.getfilesystemencoding() avoid the application crashing if it is
             # installed on a path with non-ascii characters GitHub issue #3907
             protocol_file = protocol_file.replace("\\", "/").encode(sys.getfilesystemencoding())
-
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
-
         if UM.Application.Application.getInstance().getUseExternalBackend():
             Logger.log("i", "Listening for backend connections on %s", self._port)
-
         self._socket.listen("127.0.0.1", self._port)

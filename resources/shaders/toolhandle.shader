@@ -35,7 +35,6 @@ fragment =
 vertex41core =
     #version 410
     uniform highp mat4 u_modelViewProjectionMatrix;
-
     in highp vec4 a_vertex;
     in lowp vec4 a_color;
 

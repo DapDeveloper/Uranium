@@ -7,15 +7,15 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import ".."
 import UM 1.1 as UM
-
 Dialog
 {
     id: base;
-    title: catalog.i18nc("@title:window", "Preferences")
-    minimumWidth: UM.Theme.getSize("modal_window_minimum").width
-    minimumHeight: UM.Theme.getSize("modal_window_minimum").height
-    width: minimumWidth
-    height: minimumHeight
+    title: catalog.i18nc("@title:window", "Preferences");
+    minimumWidth: UM.Theme.getSize("modal_window_minimum").width;
+    minimumHeight: UM.Theme.getSize("modal_window_minimum").height;
+    width: minimumWidth;
+    height: minimumHeight;
+
     property int currentPage: 0;
     Item
     {
@@ -61,17 +61,15 @@ Dialog
         {
             id: pagesList;
             anchors {
-                left: stackView.right;
+                //left: stackView.right;
                 top: parent.top;
                 right:parent.right;
             }
-            width: 7 * UM.Theme.getSize("line").width;
+            width: 100;
             alternatingRowColors: false;
             headerVisible: true;
             model: ListModel { id: configPagesModel; }
-
             TableViewColumn { role: "name" }
-
             onClicked:
             {
                 if(base.currentPage != row)
@@ -92,14 +90,12 @@ Dialog
         }
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
-
     leftButtons: Button
     {
         text: catalog.i18nc("@action:button", "Defaults");
         enabled: stackView.currentItem.resetEnabled;
         onClicked: stackView.currentItem.reset();
     }
-
     rightButtons: Button
     {
         text: catalog.i18nc("@action:button", "Close");
@@ -111,27 +107,21 @@ Dialog
     {
         pagesList.selection.clear();
         pagesList.selection.select(index);
-
         stackView.replace(configPagesModel.get(index).item);
-
         base.currentPage = index
     }
-
     function insertPage(index, name, item)
     {
         configPagesModel.insert(index, { "name": name, "item": item });
     }
-
     function removePage(index)
     {
         configPagesModel.remove(index)
     }
-
     function getCurrentItem(key)
     {
         return stackView.currentItem
     }
-
     Component.onCompleted:
     {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.

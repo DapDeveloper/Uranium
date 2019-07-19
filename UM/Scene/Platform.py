@@ -8,9 +8,8 @@ from UM.Logger import Logger
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
 from UM.Job import Job
-
+from UM.Math.Color import Color
 from UM.View.GL.OpenGL import OpenGL
-
 
 ##  Platform is a special case of Scene node. It renders a specific model as the platform of the machine.
 #   A specialised class is used due to the differences in how it needs to rendered and the fact that a platform
@@ -19,7 +18,6 @@ from UM.View.GL.OpenGL import OpenGL
 class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
         super().__init__(parent)
-
         self._load_platform_job = None
         self._shader = None
         self._texture = None
@@ -27,23 +25,25 @@ class Platform(SceneNode.SceneNode):
         Application.getInstance().globalContainerStackChanged.connect(self._onGlobalContainerStackChanged)
         self._onGlobalContainerStackChanged()
         self.setCalculateBoundingBox(False)
-
     def render(self, renderer):
         if not self._shader:
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
+            #self._shader.setUniformValue("u_plateColor", Color(*theme.getColor("buildplate").getRgb()))
+            self._shader.setUniformValue("u_opacity",1.0)
+            self._color = Color(0, 0, 0)
+            self._shader.setUniformValue("u_diffuseColor", self._color)
+
             if self._texture:
                 self._shader.setTexture(0, self._texture)
             else:
                 self._updateTexture()
 
         if self.getMeshData():
-            renderer.queueNode(self, shader = self._shader, transparent = True, backface_cull = True, sort = -10)
+            renderer.queueNode(self, shader = self._shader, transparent = False, backface_cull = True, sort = -10)
             return True
-
     def _onGlobalContainerStackChanged(self):
         if self._global_container_stack:
             self.setMeshData(None)
-
         self._global_container_stack = Application.getInstance().getGlobalContainerStack()
         if self._global_container_stack:
             container = self._global_container_stack.findContainer({ "platform": "*" })
@@ -54,16 +54,13 @@ class Platform(SceneNode.SceneNode):
                 except FileNotFoundError:
                     Logger.log("w", "Unable to find the platform mesh %s", mesh_file)
                     path = ""
-
                 if self._load_platform_job:
                     # This prevents a previous load job from triggering texture loads.
                     self._load_platform_job.finished.disconnect(self._onPlatformLoaded)
-
                 # Perform platform mesh loading in the background
                 self._load_platform_job = _LoadPlatformJob(path)
                 self._load_platform_job.finished.connect(self._onPlatformLoaded)
                 self._load_platform_job.start()
-
                 offset = container.getMetaDataEntry("platform_offset")
                 if offset:
                     if len(offset) == 3:
@@ -73,49 +70,37 @@ class Platform(SceneNode.SceneNode):
                         self.setPosition(Vector(0.0, 0.0, 0.0))
                 else:
                     self.setPosition(Vector(0.0, 0.0, 0.0))
-
     def _updateTexture(self):
         if not self._global_container_stack or not OpenGL.getInstance():
             return
-
         self._texture = OpenGL.getInstance().createTexture()
-
         container = self._global_container_stack.findContainer({"platform_texture":"*"})
         if container:
             texture_file = container.getMetaDataEntry("platform_texture")
             self._texture.load(Resources.getPath(Resources.Images, texture_file))
         # Note: if no texture file is specified, a 1 x 1 pixel transparent image is created
         # by UM.GL.QtTexture to prevent rendering issues
-
         if self._shader:
             self._shader.setTexture(0, self._texture)
-
     def _onPlatformLoaded(self, job):
         self._load_platform_job = None
-
         if not job.getResult():
             self.setMeshData(None)
             return
-
         node = job.getResult()
         if node.getMeshData():
             self.setMeshData(node.getMeshData())
-
             # Calling later because for some reason the OpenGL context might be outdated on some computers.
             Application.getInstance().callLater(self._updateTexture)
-
-
 ##  Protected class that ensures that the mesh for the machine platform is loaded.
 class _LoadPlatformJob(Job):
     def __init__(self, file_name):
         super().__init__()
         self._file_name = file_name
         self._mesh_handler = Application.getInstance().getMeshFileHandler()
-
     def run(self):
         reader = self._mesh_handler.getReaderForFile(self._file_name)
         if not reader:
             self.setResult(None)
             return
-
         self.setResult(reader.read(self._file_name))

@@ -7,12 +7,13 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import ".."
 import UM 1.1 as UM
+
 Dialog
 {
     id: base;
     title: catalog.i18nc("@title:window", "SliceWizard")
-    minimumWidth: UM.Theme.getSize("modal_window_minimum").width
-    minimumHeight: UM.Theme.getSize("modal_window_minimum").height
+    minimumWidth: 800//UM.Theme.getSize("modal_window_minimum").width
+    minimumHeight:730// UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
     height: minimumHeight
     property int currentPage: 0;
@@ -79,16 +80,17 @@ Dialog
                 }
             }
             Text {
-            id: header
-            text: "Steps"
-            anchors{
-                horizontalCenter:parent.horizontalCenter
-                margins:2
-            }
+                id: header
+                text: "Steps"
+                anchors{
+                    horizontalCenter:parent.horizontalCenter
+                    margins:2
+                }
             }
         }
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
+    
    /* leftButtons: Button
     {
         text: catalog.i18nc("@action:button", "Defaults");

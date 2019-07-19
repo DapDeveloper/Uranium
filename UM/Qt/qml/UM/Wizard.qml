@@ -1,12 +1,10 @@
 // Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
-
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
 import QtQml 2.2
-
 import UM 1.1 as UM
 
 UM.Dialog
@@ -16,21 +14,16 @@ UM.Dialog
     property int currentPage: -1;
     property bool lastPage: currentPage == pagesModel.count - 1;
     closeOnAccept: false; // Do not automatically close the window when the window is "accepted"
-
     property bool firstRun: false
-
     title: currentPage != -1 ? pagesModel.get(currentPage).title : ""
-
     signal nextClicked()
     signal backClicked()
-
     minimumWidth: UM.Theme.getSize("modal_window_minimum").width
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
     height: minimumHeight
 
     onAccepted: base.nextPage()
-
 
     // Provides a single mechanism for going to the next page or closing the wizard on the last page
     // Pages can use the nextClicked signal to extend this event
@@ -81,16 +74,13 @@ UM.Dialog
         //returns the actual source of a page
         return pagesModel.get(index).page
     }
-
     function getPageCount()
     {
         return pagesModel.count;
     }
-
     Item
     {
         anchors.fill: parent;
-
         Rectangle
         {
             id: wizardProgress
@@ -99,7 +89,6 @@ UM.Dialog
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             color: palette.light
-
             Component
             {
                 id: wizardDelegate
@@ -111,9 +100,7 @@ UM.Dialog
                         id: progressButton
                         width: wizardProgress.width
                         text: title
-
                         property bool active: pagesModel.get(base.currentPage) != undefined && text == pagesModel.get(base.currentPage).title;
-
                         style: ButtonStyle
                         {
                             background: Rectangle
@@ -182,14 +169,11 @@ UM.Dialog
                 leftMargin: UM.Theme.getSize("default_margin").width;
                 right: parent.right;
             }
-
             width: parent.width - wizardProgress.width - (2 *  UM.Theme.getSize("default_margin").width)
             children: content;
-
             // In between property so we can listen to onConnectChanged
             property var content: pagesModel.get(base.currentPage) ? pagesModel.get(base.currentPage).page : Item;
             property var wizard: base
-
             // Connect the completed of the page to the nextPage of the wizard.
             onContentChanged:
             {

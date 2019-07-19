@@ -7,11 +7,9 @@ import UM 1.3 as UM
 Item
 {
     id: base;
-
     property alias source: img.source
     property alias color: shader.color
     property alias sourceSize: img.sourceSize
-
     Image
     {
         id: img
@@ -20,7 +18,6 @@ Item
         sourceSize.width: parent.width
         sourceSize.height: parent.height
     }
-
     ShaderEffect
     {
         id: shader
@@ -50,7 +47,6 @@ Item
                 gl_Position = qt_Matrix * qt_Vertex;
             }
             "
-
         fragmentShader: UM.OpenGLContextProxy.isLegacyOpenGL ?
             "
             varying highp vec2 coord;

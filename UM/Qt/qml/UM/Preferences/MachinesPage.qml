@@ -28,26 +28,21 @@ ManagementPage {
     Flow {
         anchors.fill: parent;
         spacing: UM.Theme.getSize("default_margin").height;
-
         Label {
             text: base.currentItem && base.currentItem.name ? base.currentItem.name : ""
             font: UM.Theme.getFont("large_bold")
             width: parent.width
             elide: Text.ElideRight
         }
-
         Label {
             text: catalog.i18nc("@label", "Type");
             width: Math.round(parent.width * 0.2);
         }
-
         Label {
             text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : "";
             width: Math.round(parent.width * 0.7);
         }
-
         UM.I18nCatalog { id: catalog; name: "uranium"; }
-
         ConfirmRemoveDialog {
             id: confirmDialog;
             object: base.currentItem && base.currentItem.name ? base.currentItem.name : "";

@@ -268,9 +268,7 @@ class Application:
 
     def getUseExternalBackend(self) -> bool:
         return self._use_external_backend
-
     visibleMessageAdded = Signal()
-
     ##  Hide message by ID (as provided by built-in id function)
     def hideMessageById(self, message_id: int) -> None:
         # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
@@ -293,11 +291,9 @@ class Application:
     def getVisibleMessages(self) -> List[Message]:
         with self._message_lock:
             return self._visible_messages
-
     ##  Function that needs to be overridden by child classes with a list of plugins it needs.
     def _loadPlugins(self) -> None:
         pass
-
     ##  Get name of the application.
     #   \returns app_name \type{string}
     def getApplicationName(self) -> str:

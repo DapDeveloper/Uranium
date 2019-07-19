@@ -15,9 +15,7 @@ MouseArea
     property color hoverBackgroundColor: backgroundColor
     property alias iconSource: image.source
     property real iconMargin: 0
-
     property alias hovered: base.containsMouse
-
     Rectangle
     {
         id: background

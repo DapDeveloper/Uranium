@@ -39,9 +39,7 @@ class Duration(QObject):
 
         if duration is not None:
             self.setDuration(duration)
-
     durationChanged = pyqtSignal()
-
     @pyqtProperty(int, notify = durationChanged)
     def days(self):
         return self._days

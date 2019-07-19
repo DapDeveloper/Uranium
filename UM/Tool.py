@@ -29,13 +29,10 @@ class Tool(PluginObject):
         self._drag_plane = None #type: Optional[Plane]
         self._drag_start = None #type: Optional[Vector]
         self._exposed_properties = [] #type: List[str]
-
         self._selection_pass = None #type: Optional[SelectionPass]
-
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
         self._selected_objects_without_selected_ancestors = None #type: Optional[List[SceneNode]]
-
         self._shortcut_key = None
 
     ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.

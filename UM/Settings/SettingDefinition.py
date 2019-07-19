@@ -617,8 +617,13 @@ class SettingDefinition:
         "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": "", "depends_on" : None},
         # The default value of the setting. Used when no value function is defined.
         "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 0, "depends_on" : None},
+        "step_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 1, "depends_on" : None},
+        "precision": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 0, "depends_on" : None},
+        "slider_min": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True,  "default": 0, "depends_on" : None},
+        "slider_max": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True,  "default": 100, "depends_on" : None},
         # A function used to calculate the value of the setting.
         "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": None, "depends_on" : None},
+        
         # A function that should evaluate to a boolean to indicate whether or not the setting is enabled.
         "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True, "depends_on": None},
         # A function that calculates the minimum value for this setting. If the value is less than this, validation will indicate an error.
@@ -631,6 +636,7 @@ class SettingDefinition:
         "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None, "depends_on" : None},
         # A dictionary of key-value pairs that provide the options for an enum type setting. The key is the actual value, the value is a translated display string.
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {}, "depends_on" : None},
+
         # Optional comments that apply to the setting. Will be ignored.
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
     }   # type: Dict[str, Dict[str, Any]]

@@ -17,19 +17,13 @@ PreferencesPage
     property string nameRole: "name";
     property string sectionRole: "group"
     property bool detailsVisible: true;
-
     property variant objectList: objectList;
     property variant currentItem: null
     property string scrollviewCaption: "";
-
     default property alias details: detailsPane.children;
-
     signal itemActivated();
-
     property alias buttons: buttonRow.children;
-
     resetEnabled: false;
-
     property string activeId: ""
     property int activeIndex: -1
 

@@ -69,14 +69,11 @@ class ListModel(QAbstractListModel):
         #   - it can cause crashes on Mac OS X for some reason when endResetModel() is called (CURA-6015)
         # So in this case, we use insertRows(), removeRows() and dataChanged signals to do
         # smarter model update.
-
         old_row_count = len(self._items)
         new_row_count = len(items)
         changed_row_count = min(old_row_count, new_row_count)
-
         need_to_add = old_row_count < new_row_count
         need_to_remove = old_row_count > new_row_count
-
         # In the case of insertion and deletion, we need to call beginInsertRows()/beginRemoveRows() and
         # endInsertRows()/endRemoveRows() before we modify the items.
         # In the case of modification on the existing items, we only need to modify the items and then emit
@@ -85,14 +82,11 @@ class ListModel(QAbstractListModel):
         # Here it is simplified to replace the complete items list instead of adding/removing/modifying them one by one,
         # and it needs to make sure that the necessary signals (insert/remove/modified) are emitted before and after
         # the item replacement.
-
         if need_to_add:
             self.beginInsertRows(QModelIndex(), old_row_count, new_row_count - 1)
         elif need_to_remove:
             self.beginRemoveRows(QModelIndex(), new_row_count, old_row_count - 1)
-
         self._items = items
-
         if need_to_add:
             self.endInsertRows()
         elif need_to_remove:

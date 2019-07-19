@@ -9,23 +9,17 @@ import UM 1.0 as UM
 
 Window {
     id: base
-
     modality: Qt.ApplicationModal;
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint;
-
-    minimumWidth: screenScaleFactor * 800;
-    minimumHeight: screenScaleFactor * 480;
+    minimumWidth: screenScaleFactor * 1380;
+    minimumHeight: screenScaleFactor * 800;
     width: minimumWidth
     height: minimumHeight
-
     property int margin: screenScaleFactor * 8;
     property bool closeOnAccept: true;  // Automatically close the window when the window is "accepted" (eg using the return key)
-
     default property alias contents: contentItem.children;
-
     property alias leftButtons: leftButtonRow.children;
     property alias rightButtons: rightButtonRow.children;
-
     signal accepted();
     signal rejected();
 
@@ -35,7 +29,6 @@ Window {
         }
         base.accepted();
     }
-
     function reject() {
         //If we don't have a close button we don't want to allow the user to close the window by rejecting it (escape key).
         if (base.flags & Qt.WindowCloseButtonHint)
@@ -44,28 +37,21 @@ Window {
             base.rejected();
         }
     }
-
     function open() {
         base.visible = true;
     }
-
     Rectangle {
         anchors.fill: parent;
         color: palette.window;
-
         focus: base.visible;
-
         Keys.onEscapePressed:{
             base.reject();
         }
-
         Keys.onReturnPressed: {
             base.accept();
         }
-
         Item {
             id: contentItem;
-
             anchors {
                 left: parent.left;
                 leftMargin: base.margin;
@@ -77,10 +63,8 @@ Window {
                 bottomMargin: base.margin;
             }
         }
-
         Item {
             id: buttonRow;
-
             anchors {
                 bottom: parent.bottom;
                 bottomMargin: base.margin;
@@ -90,12 +74,9 @@ Window {
                 rightMargin: base.margin;
             }
             height: childrenRect.height;
-
             Row { id: leftButtonRow; anchors.left: parent.left; }
-
             Row { id: rightButtonRow; anchors.right: parent.right; }
         }
     }
-
     SystemPalette { id: palette; }
 }

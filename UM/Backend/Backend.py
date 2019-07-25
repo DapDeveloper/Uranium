@@ -197,9 +197,13 @@ class Backend(PluginObject):
             # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
             while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
+            sleep(0.1)    
             # If the error occurred due to parsing, both connections believe that connection is okay.
             # So we need to force a close.
             self._socket.close()
+            sleep(0.1)
+            Logger.log("d","SOCKET CLOSED !!!")
+            
         self._socket = SignalSocket()
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)

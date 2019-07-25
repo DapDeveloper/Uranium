@@ -623,7 +623,6 @@ class SettingDefinition:
         "slider_max": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True,  "default": 100, "depends_on" : None},
         # A function used to calculate the value of the setting.
         "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": None, "depends_on" : None},
-        
         # A function that should evaluate to a boolean to indicate whether or not the setting is enabled.
         "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True, "depends_on": None},
         # A function that calculates the minimum value for this setting. If the value is less than this, validation will indicate an error.

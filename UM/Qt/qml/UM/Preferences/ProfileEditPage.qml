@@ -11,7 +11,7 @@ Dialog
 {
     id: base;
     title: catalog.i18nc("@title:window", "Profile Edit")
-    minimumWidth: UM.Theme.getSize("modal_window_minimum").width
+    minimumWidth: 1000
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
     height: minimumHeight

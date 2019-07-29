@@ -37,7 +37,6 @@ class ToolModel(ListModel):
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.LocationRole, "location")
         self.addRoleName(self.ShortcutRole, "shortcut")
-
     def _onToolsChanged(self):
         items = []
 

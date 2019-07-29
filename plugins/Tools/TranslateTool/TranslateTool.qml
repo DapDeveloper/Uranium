@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.2
+import QtQuick 2.3
 import QtQuick.Controls 1.2
 
 import UM 1.1 as UM
@@ -49,25 +49,23 @@ Item
     Grid
     {
         id: textfields;
-
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.top: parent.top;
-
         columns: 2;
         flow: Grid.TopToBottom;
         spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
+
+    
 
         Label
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "X";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("x_axis");
+            font: UM.Theme.getFont("customCoordinates");
             verticalAlignment: Text.AlignVCenter;
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-
         Label
         {
             height: UM.Theme.getSize("setting_control").height;
@@ -78,7 +76,6 @@ Item
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-
         Label
         {
             height: UM.Theme.getSize("setting_control").height;
@@ -102,7 +99,7 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-
+            anchors.top:messageImage.bottom
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -124,7 +121,7 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-
+            anchors.right:messageImage.left
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -146,6 +143,7 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
+            anchors.left:messageImage.right
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values

@@ -9,8 +9,8 @@ import UM 1.1 as UM
 Item
 {
     id: base
-    width: childrenRect.width
-    height: childrenRect.height
+    width: 200
+    height: 150
     UM.I18nCatalog { id: catalog; name: "uranium"}
 
     property string xText
@@ -55,19 +55,35 @@ Item
         flow: Grid.TopToBottom;
         spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
 
-    
+        Image
+        {
+            id: translateImage
+            height:100
+            width:100
+            fillMode: Image.PreserveAspectFit
+            source:UM.Theme.getImage("cube2")
+        }
 
         Label
         {
+            id:labelX
             height: UM.Theme.getSize("setting_control").height;
             text: "X";
             font: UM.Theme.getFont("customCoordinates");
             verticalAlignment: Text.AlignVCenter;
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+            anchors
+            {
+                left:translateImage.right
+                top:translateImage.bottom
+            }
+            anchors.topMargin:-15
+            anchors.leftMargin:-15
         }
         Label
         {
+            id:labelY
             height: UM.Theme.getSize("setting_control").height;
             text: "Y";
             font: UM.Theme.getFont("default");
@@ -75,9 +91,17 @@ Item
             verticalAlignment: Text.AlignVCenter;
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+            anchors
+            {
+                left:translateImage.left
+                top:translateImage.bottom
+            }
+            anchors.leftMargin:30
+            anchors.topMargin:-50
         }
         Label
         {
+            id:labelZ
             height: UM.Theme.getSize("setting_control").height;
             text: "Z";
             font: UM.Theme.getFont("default");
@@ -85,11 +109,17 @@ Item
             verticalAlignment: Text.AlignVCenter;
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+            anchors
+            {
+                left:translateImage.left
+                top:translateImage.top
+            }
+            anchors.leftMargin:2
         }
         TextField
         {
             id: xTextField
-            width: UM.Theme.getSize("setting_control").width;
+            width: 100;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
@@ -99,7 +129,6 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-            anchors.top:messageImage.bottom
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -107,11 +136,19 @@ Item
             }
             Keys.onBacktabPressed: selectTextInTextfield(zTextField)
             Keys.onTabPressed: selectTextInTextfield(yTextField)
+            anchors
+            {
+                left:labelX.right
+                top:labelX.top
+            }
+            anchors.leftMargin:5
+            
+
         }
         TextField
         {
             id: yTextField
-            width: UM.Theme.getSize("setting_control").width;
+            width: 100;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
@@ -121,7 +158,12 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-            anchors.right:messageImage.left
+            anchors
+            {
+                left:labelY.right
+                top:labelY.top
+            }
+            anchors.leftMargin:5
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -133,7 +175,7 @@ Item
         TextField
         {
             id: zTextField
-            width: UM.Theme.getSize("setting_control").width;
+            width: 100;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
@@ -143,7 +185,12 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-            anchors.left:messageImage.right
+            anchors
+            {
+                left:labelZ.right
+                top:labelZ.top
+            }
+            anchors.leftMargin:5
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -186,11 +233,18 @@ Item
 
 
         id: lockPositionCheckbox
-        anchors.top: textfields.bottom
+        /*anchors.top: textfields.bottom
         anchors.topMargin: UM.Theme.getSize("default_margin").height;
         anchors.left: textfields.left
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
+*/
 
+        anchors
+        {
+            left:parent.left
+            bottom:parent.bottom
+        }
+      
         text: catalog.i18nc("@option:check","Lock Model");
         style: UM.Theme.styles.partially_checkbox;
 

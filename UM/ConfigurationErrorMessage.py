@@ -39,11 +39,9 @@ class ConfigurationErrorMessage(Message):
             faulty_containers = [faulty_containers]
         for container in itertools.chain(faulty_containers, args):
             self._faulty_containers.add(container)
-
         if initial_length != len(self._faulty_containers):
             self.setText(i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles.").format(profiles = "\n- ".join(self._faulty_containers)))
-            self.show()
-
+            #self.show()
     def _actionTriggered(self, _, action_id):
         if action_id == "reset":
             result = QMessageBox.question(None, i18n_catalog.i18nc("@title:window", "Reset to factory"),
@@ -52,9 +50,7 @@ class ConfigurationErrorMessage(Message):
             if result == QMessageBox.Yes:
                 Resources.factoryReset()
                 sys.exit(1)
-
     __instance = None   # type: ConfigurationErrorMessage
-
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "ConfigurationErrorMessage":
         return cls.__instance

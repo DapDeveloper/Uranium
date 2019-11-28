@@ -54,7 +54,6 @@ Item
         columns: 2;
         flow: Grid.TopToBottom;
         spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
-
         Image
         {
             id: translateImage
@@ -63,7 +62,6 @@ Item
             fillMode: Image.PreserveAspectFit
             source:UM.Theme.getImage("cube2")
         }
-
         Label
         {
             id:labelX
@@ -142,8 +140,6 @@ Item
                 top:labelX.top
             }
             anchors.leftMargin:5
-            
-
         }
         TextField
         {

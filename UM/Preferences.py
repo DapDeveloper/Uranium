@@ -19,20 +19,17 @@ MimeTypeDatabase.addMimeType(
     )
 )
 
-
 ##      Preferences are application based settings that are saved for future use.
 #       Typical preferences would be window size, standard machine, etc.
 #       The application preferences can be gotten from the getPreferences() function in Application
 @signalemitter
 class Preferences:
     Version = 6
-
     def __init__(self) -> None:
         super().__init__()
 
         self._parser = None  # type: Optional[configparser.ConfigParser]
         self._preferences = {}  # type: Dict[str, Dict[str, _Preference]]
-
     ##  Add a new preference to the list. If the preference was already added, it's default is set to whatever is provided
     def addPreference(self, key: str, default_value: Any) -> None:
         if key.count("/") != 1:
@@ -41,7 +38,6 @@ class Preferences:
         if preference:
             self.setDefault(key, default_value)
             return
-
         group, key = self._splitKey(key)
         if group not in self._preferences:
             self._preferences[group] = {}
@@ -187,9 +183,7 @@ class Preferences:
             Logger.logException("e", "An exception occurred while trying to read preferences file")
             self._parser = None
             return
-
         del self._parser["general"]["version"]
-
     ##  Extract data from string and store it in the Configuration parser.
     def deserialize(self, serialized: str) -> None:
         updated_preferences = self.__updateSerialized(serialized)
@@ -201,7 +195,6 @@ class Preferences:
             self._parser = None
             return
         has_version = "general" in self._parser and "version" in self._parser["general"]
-
         if has_version:
             if self._parser["general"]["version"] != str(Preferences.Version):
                 Logger.log("w", "Could not deserialize preferences from loaded project")
@@ -209,13 +202,10 @@ class Preferences:
                 return
         else:
             return
-
         self.__initializeSettings()
-
     ##  Updates the given serialized data to the latest version.
     def __updateSerialized(self, serialized: str) -> str:
         configuration_type = "preferences"
-
         try:
             from UM.VersionUpgradeManager import VersionUpgradeManager
             version = VersionUpgradeManager.getInstance().getFileVersion(configuration_type, serialized)

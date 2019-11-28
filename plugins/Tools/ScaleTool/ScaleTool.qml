@@ -263,7 +263,6 @@ Item
 
             return -1
         }
-
         function evaluateTextChange(text, lastEnteredValue, valueName, scaleName)
         {
             var currentModelSize = UM.ActiveTool.properties.getValue(valueName);

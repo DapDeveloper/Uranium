@@ -470,6 +470,12 @@ class SettingDefinitionsModel2(QAbstractListModel):
         return self._role_names
 
     def _onVisibilityChanged(self) -> None:
+        Logger.log("d","--------------------------------------");
+        Logger.log("d","--------------------------------------");
+        Logger.log("d","VISCHANGE");
+        Logger.log("d","--------------------------------------");
+        Logger.log("d","--------------------------------------");
+
         self._visible = self._visibility_handler.getVisible()
 
         for row in range(len(self._row_index_list)):

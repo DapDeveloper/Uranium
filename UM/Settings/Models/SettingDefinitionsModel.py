@@ -485,6 +485,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         return self._role_names
 
     def _onVisibilityChanged(self) -> None:
+       # Logger.log("d","VV CHAN")
         self._visible = self._visibility_handler.getVisible()
 
         for row in range(len(self._row_index_list)):

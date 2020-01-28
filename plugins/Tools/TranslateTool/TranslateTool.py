@@ -85,14 +85,12 @@ class TranslateTool(Tool):
         except ValueError:
             parsed_value = float(0)
         return parsed_value
-
     ##  Set the x-location of the selected object(s) by translating relative to
     #   the selection bounding box center.
     #   \param x Location in mm.
     def setX(self, x: str) -> None:
         parsed_x = self._parseInt(x)
         bounding_box = Selection.getBoundingBox()
-
         if not Float.fuzzyCompare(parsed_x, float(bounding_box.center.x), DIMENSION_TOLERANCE):
             selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
             if len(selected_nodes) > 1:
@@ -108,16 +106,13 @@ class TranslateTool(Tool):
                     world_position = selected_node.getWorldPosition()
                     new_position = world_position.set(x = parsed_x + (world_position.x - bounding_box.center.x))
                     TranslateOperation(selected_node, new_position, set_position = True).push()
-
         self._controller.toolOperationStopped.emit(self)
-
     ##  Set the y-location of the selected object(s) by translating relative to
     #   the selection bounding box center.
     #   \param y Location in mm.
     def setY(self, y: str) -> None:
         parsed_y = self._parseInt(y)
         bounding_box = Selection.getBoundingBox()
-
         if not Float.fuzzyCompare(parsed_y, float(bounding_box.center.z), DIMENSION_TOLERANCE):
             selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
             if len(selected_nodes) > 1:
@@ -135,9 +130,7 @@ class TranslateTool(Tool):
                     world_position = selected_node.getWorldPosition()
                     new_position = world_position.set(z = parsed_y + (world_position.z - bounding_box.center.z))
                     TranslateOperation(selected_node, new_position, set_position = True).push()
-
         self._controller.toolOperationStopped.emit(self)
-
     ##  Set the y-location of the selected object(s) by translating relative to
     #   the selection bounding box bottom.
     #   \param z Location in mm.
